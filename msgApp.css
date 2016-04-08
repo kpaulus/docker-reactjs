@@ -1,0 +1,133 @@
+
+ul {
+  list-style-type: none;
+  line-height: 1.5;
+}
+
+.text-box {
+  width: 50%;
+}
+
+input[type=submit] {
+  border: 1px solid #ccc;
+  margin-left: 15px;
+  padding: 5px 15px;
+  font-size: 1em;
+}
+
+@grey: #e5e5ea;
+@blue: #1289fe;
+
+body {
+  background: white;
+  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+#msgApp {
+  max-width: 100%;
+  height: 100%;
+}
+
+.chat-img {
+  max-width: 50%;
+  max-height: 50%;
+}
+
+.top-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  text-align: center;
+  color: #000;
+  width: 100%;
+  padding-top: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.bottom-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.chat {
+  text-align: center;
+  width: 50%;
+  padding-left: 30px;
+  padding-right: 30px;
+  position: absolute;
+  top: 40px;
+  left: 25%;
+  right: 25%;
+  bottom: 50px;
+  overflow: auto;
+}
+
+p.stamp {
+  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0 0 0.5em;
+  border-radius: 1em;
+  padding: 0.5em 1em;
+  color: #e5e5ea;
+  max-width: 75%;
+  clear: both;
+  position: relative;
+}
+
+p.them {
+  margin: 0 0 0.5em;
+  border-radius: 1em;
+  padding: 0.5em 1em;
+  background: #e5e5ea;
+  max-width: 75%;
+  clear: both;
+  position: relative;
+  float: left;
+}
+
+p.them::after {
+  content: "";
+  position: absolute;
+  left: -0.5em;
+  bottom: 0;
+  width: 0.5em;
+  height: 1em;
+  border-right: 0.5em solid #e5e5ea;
+  border-bottom-right-radius: 1em 0.5em;
+}
+
+p.me {
+  margin: 0 0 0.5em;
+  border-radius: 1em;
+  padding: 0.5em 1em;
+  background: #e5e5ea;
+  max-width: 75%;
+  clear: both;
+  position: relative;
+  float: right;
+  background-color: #1289fe;
+  color: white;
+}
+
+p.me::after {
+  content: "";
+  position: absolute;
+  right: -0.5em;
+  bottom: 0;
+  width: 0.5em;
+  height: 1em;
+  border-left: 0.5em solid #1289fe;
+  border-bottom-left-radius: 1em 0.5em;
+}

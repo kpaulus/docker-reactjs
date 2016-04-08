@@ -1,0 +1,188 @@
+<HTML>
+<head>
+<link rel="stylesheet" type="text/css" href="msgApp.css" />
+<script src="http://fb.me/react-0.12.2.min.js"></script>
+<script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+<script src="./chat-client-service.js"></script>
+<script>
+    var Server = window.ChatClientService;
+    
+    client = new Server("A000951-W7VM.ap.appareo"); //nlaney's machine
+    client.addListener(function(msg) { rx_message(msg) });
+
+    var user = "ken"
+    client.connect(user);
+
+
+    function rx_message(msg) {
+    	console.log(msg);
+    	switch(msg.type) {
+    		case "CHANNEL":
+    			rx_channel(msg);
+          myMsgs.updateItems(msg);
+    			break;
+    		case "CHAT":
+    			rx_chat(msg);
+          myMsgs.updateItems(msg);
+    			break;
+    		case "SERVER":
+          //myMsgs.updateItems(msg);
+    			break;
+    		default:
+    			console.log(msg.type + " is not defined");
+    			break;
+    	}
+    }
+ 
+    function rx_channel(msg) {
+    	switch(msg.subType) {
+    		case "CLIENT JOIN":
+    			fact = return_catfact();
+				  client.sendMessage("Hello " + msg.message);
+				  client.sendMessage("Did you know..." + fact);
+    			break;
+    		case "CLIENT LEAVE":
+    			client.sendMessage("Goodbye for meow " + msg.message);
+    			break;
+    		case "JOINED":
+    		default:
+    			break;
+    	}
+    }
+
+    function rx_chat(msg) {
+    	switch(msg.subType) {
+    		case "ALL":
+    			if (msg.source != "ken") {
+					  break;
+    		  }
+    		default:
+    			break;
+    	}
+    }
+
+    function return_catfact() {
+    	var xhr = new XMLHttpRequest();
+  		xhr.open("GET", "http://catfacts-api.appspot.com/api/facts", false);
+  		xhr.send();
+  		return JSON.parse(xhr.responseText).facts[0];
+    }
+
+</script>
+<script type="text/jsx">
+
+	"use strict";
+
+	var MsgBanner = React.createClass({
+      render: function(){
+        return (
+          <div className={'top-box'}><b>reactMessage</b></div>
+        );
+      }
+    });
+
+    var MsgList = React.createClass({
+      render: function() {
+      var createItem = function(itemText) {
+        return (
+            <MsgListItem>{itemText}</MsgListItem>
+          );
+      };
+      return (
+          <div id={"chat-box"} className={"chat"}>
+            <ul>{this.props.items.map(createItem)}</ul>
+          </div>
+        );
+      }
+    });
+
+    var MsgListItem = React.createClass({
+      render: function(){
+        var message = this.props.children.message;
+        var testRegex = /^https?:\/\/(?:[a-z\-]+\.)+[a-z]{2,6}(?:\/[^\/#?]+)+\.(?:jpe?g|gif|png)$/;
+        var validImg = testRegex.test(message) ? true : false;
+          
+        if (validImg) {
+          message = <img src={message} alt='' className={'chat-img'}/>
+        }
+
+        if (this.props.children.source == user) {
+          var source = 'me';
+          return (
+            <li><p className={'me'}>{message}</p></li>
+          );
+        }
+        else {
+          return (
+            <li><p className={'them'}><b>{this.props.children.source}</b>: {message}</p><p>test</p></li>
+          );
+        }
+
+      }
+    });
+
+    var MsgForm = React.createClass({
+      getInitialState: function() {
+        return {item: ''};
+        },
+      handleSubmit: function(e){
+        e.preventDefault();
+        //this.props.onFormSubmit(this.state.item);
+        if (this.state.item != '') {
+        	client.sendMessage(this.state.item);
+        }
+        this.setState({item: ''});
+        //React.findDOMNode(this.refs.item).focus();
+        return;
+      },
+      onChange: function(e){
+        this.setState({
+          item: e.target.value
+        });
+      },
+      render: function(){
+        return (
+          <div className={"bottom-box"}>
+            <form onSubmit={this.handleSubmit}>
+              <input placeholder='Type a Message or Image URL' className='text-box' type='text' ref='item' onChange={this.onChange} value={this.state.item}/>
+              <input type='submit' value='Send'/>
+            </form>
+          </div>
+        );
+      }
+    });		
+
+    var MsgApp = React.createClass({
+      getInitialState: function() {
+      return {items: []};
+      },
+      updateItems: function(newItem) {
+        var allItems = this.state.items.concat([newItem]);
+        this.setState({
+        items: allItems
+      });
+      var objDiv = document.getElementById("chat-box");
+      objDiv.scrollTop = objDiv.scrollHeight;
+      },
+      render: function() {
+      return (
+        <div>
+        <MsgBanner/>
+        <MsgList items={this.state.items}/>
+        <MsgForm onFormSubmit={this.updateItems}/>
+        </div>
+      );
+      }
+  
+    });
+
+    var myMsgs = React.renderComponent(<MsgApp/>, document.getElementById('msgApp'));
+
+</script>
+</head>
+<body> 
+  <div id="msgApp">
+    <!-- This is where React will work its magic -->
+  </div>
+</body>
+</HTML>

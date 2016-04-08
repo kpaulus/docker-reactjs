@@ -1,0 +1,13 @@
+{
+  "name": "chat_client_app",
+  "version": "0.1.0",
+  "description": "ReactJS Tech Challenge Chat Client",
+  "author": "First Last <first.last@example.com>",
+  "scripts": {
+    "start": "http-server"
+  },
+  "dependencies": {
+    "browserify": "latest",
+    "http-server": "latest"
+  }
+}
