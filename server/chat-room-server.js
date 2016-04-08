@@ -16,6 +16,7 @@
     };
     
     var ws = require("ws");
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
     function Message(type, subType, src, msg){
         this.type = type;
@@ -54,6 +55,7 @@
         this.onClose(null);
     };
     ChatClient.prototype.onMessage = function(message) {
+        console.log(message);
         var msg = Message.read(message);
         if(msg.type === "COMMAND"){
             if(msg.subType === "LOGON") {
@@ -83,6 +85,7 @@
         } else if(msg.type === "CHAT") {
             if(this.channel) this.channel.broadcast(new Message("CHAT", "ALL", this.name, msg.message));
         }
+
     };
     ChatClient.prototype.onClose = function(status){
         if(this.channel) this.channel.removeClient(this);
@@ -154,12 +157,23 @@
         this.name = name;
         this.clients = [];
     }
+
+    function return_catfact() {        
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://catfacts-api.appspot.com/api/facts", false);
+        xhr.send();
+        return JSON.parse(xhr.responseText).facts[0];
+    }
+
     ChatRoom.prototype.addClient = function(chatClient){
         if(this.clients.indexOf(chatClient) === -1){
             this.broadcast(new Message("CHANNEL", "CLIENT JOIN", this.name, chatClient.name));
             this.clients.push(chatClient);
             chatClient.setChannel(this);
-            chatClient.sendMessage(new Message("CHANNEL", "JOINED", this.name, null));
+            chatClient.sendMessage(new Message("CHANNEL", "JOINED", this.name, "Welcome " + chatClient.name));
+            // Cat Facts Bot
+            fact = return_catfact();
+            chatClient.sendMessage(new Message("CHAT", "ALL", "Cat Facts", chatClient.name + ", did you know..." + fact));
             return true;
         } else {
             return false;  
@@ -169,6 +183,7 @@
         this.clients.forEach(function(c){ c.sendMessage(message); });
     };
     ChatRoom.prototype.removeClient = function(chatClient){
+        chatClient.sendMessage(new Message("CHAT", "ALL", "Cat Facts", "Goodbye for meow "+ chatClient.name));
         var removed = this.clients.remove(chatClient);
         if(removed){
             if(this.clients.length === 0){
@@ -183,6 +198,6 @@
         return this.clients.map(function(c){ return c.name; });
     };
 
-    var wss = new ws.Server({ port: 8080 });
+    var wss = new ws.Server({ port: 8081 });
     new ChatServer(wss).start();
 })();

@@ -7,19 +7,14 @@
 <script>
     var Server = window.ChatClientService;
     
-    client = new Server("A000951-W7VM.ap.appareo"); //nlaney's machine
-    client.addListener(function(msg) { rx_message(msg) });
-
-    var user = "ken"
-    client.connect(user);
-
-
+    var user = ''
+    
     function rx_message(msg) {
     	console.log(msg);
     	switch(msg.type) {
     		case "CHANNEL":
     			rx_channel(msg);
-          myMsgs.updateItems(msg);
+          //myMsgs.updateItems(msg);
     			break;
     		case "CHAT":
     			rx_chat(msg);
@@ -35,15 +30,10 @@
     }
  
     function rx_channel(msg) {
+      // Channel Message handler
     	switch(msg.subType) {
     		case "CLIENT JOIN":
-    			fact = return_catfact();
-				  client.sendMessage("Hello " + msg.message);
-				  client.sendMessage("Did you know..." + fact);
-    			break;
     		case "CLIENT LEAVE":
-    			client.sendMessage("Goodbye for meow " + msg.message);
-    			break;
     		case "JOINED":
     		default:
     			break;
@@ -61,22 +51,43 @@
     	}
     }
 
-    function return_catfact() {
-    	var xhr = new XMLHttpRequest();
-  		xhr.open("GET", "http://catfacts-api.appspot.com/api/facts", false);
-  		xhr.send();
-  		return JSON.parse(xhr.responseText).facts[0];
-    }
-
 </script>
 <script type="text/jsx">
 
 	"use strict";
 
 	var MsgBanner = React.createClass({
+      getInitialState: function() {
+        return {user: ''};
+        },
+      handleSubmit: function(e){
+        e.preventDefault();
+        //this.props.onFormSubmit(this.state.item);
+        if (this.state.item != '') {
+          client.sendMessage(this.state.item);
+        }
+        this.setState({user: ''});
+        //React.findDOMNode(this.refs.item).focus();
+        return;
+      },
+      onChange: function(e){
+        if (client != undefined)
+          client.close();
+        client = new Server("localhost", "8081");
+        client.addListener(function(msg) { rx_message(msg) });
+        this.setState({
+          user: e.target.value
+        });
+        user = this.state.user;
+        client.connect(user);
+
+      },
       render: function(){
         return (
-          <div className={'top-box'}><b>reactMessage</b></div>
+          <div className={'top-box'}>
+            <b>reactMessage</b>
+            <input placeholder='Type a Username' className='user-box' type='text' ref='user' onChange={this.onChange} value={this.state.user}/>
+          </div>
         );
       }
     });

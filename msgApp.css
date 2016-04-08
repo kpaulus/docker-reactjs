@@ -8,6 +8,13 @@ ul {
   width: 50%;
 }
 
+.user-box {
+  width: 200px;
+  text-align: right;
+  right: 10px;
+  position: absolute;
+}
+
 input[type=submit] {
   border: 1px solid #ccc;
   margin-left: 15px;
@@ -87,6 +94,7 @@ p.stamp {
 }
 
 p.them {
+  text-align: left;
   margin: 0 0 0.5em;
   border-radius: 1em;
   padding: 0.5em 1em;
@@ -109,6 +117,7 @@ p.them::after {
 }
 
 p.me {
+  text-align: left;
   margin: 0 0 0.5em;
   border-radius: 1em;
   padding: 0.5em 1em;

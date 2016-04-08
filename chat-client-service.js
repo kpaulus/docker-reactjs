@@ -78,8 +78,9 @@
     // LOCAL messages include:
     // (LOCAL, ERROR, null, errMsg) - event when the local service encounters an error
     //
-    function ChatClientService(targetHost){
+    function ChatClientService(targetHost, targetPort){
         this._host = targetHost; 
+        this._port = targetPort;
         this._listeners = [];
         this._ws = null;
         this._name = null;
@@ -95,7 +96,7 @@
     ChatClientService.prototype.connect = function(loginName) {
         this.close();
         this._name = loginName;
-        this._ws = new WebSocket("ws://" + this._host + ":8080");
+        this._ws = new WebSocket("ws://" + this._host + ":" + this._port);
         this._ws.onopen = ChatClientService.prototype._onOpen.bind(this);
         this._ws.onmessage = ChatClientService.prototype._onMessage.bind(this);
         this._ws.onclose = ChatClientService.prototype._onClose.bind(this);

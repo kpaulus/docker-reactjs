@@ -1,0 +1,15 @@
+{
+  "name": "chat_service_app",
+  "version": "0.1.0",
+  "description": "ReactJS Tech Challenge Chat Server",
+  "author": "First Last <first.last@example.com>",
+  "scripts": {
+    "start": "node chat-room-server.js"
+  },
+  "dependencies": {
+    "options": "0.0.6",
+    "ultron": "1.0.2",
+    "ws": "1.0.1",
+    "xmlhttprequest": "1.8.0"
+  }
+}
